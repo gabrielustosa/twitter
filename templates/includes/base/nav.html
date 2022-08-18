@@ -1,0 +1,22 @@
+{% load i18n %}
+
+<header class="dark:bg-gray-800">
+    <div class="flex justify-center p-5 items-center relative">
+        <a href="/" class="text-4xl font-semibold text-sky-600 dark:text-white cursor-pointer">
+            Calories
+        </a>
+        {% if user.is_anonymous %}
+            <div class="flex space-x-5 absolute right-0 mx-2">
+                <a href="{% url 'login' %}"
+                   class="p-2 px-3 font-lg bg-sky-700 text-gray-300 rounded-lg font-bold cursor-pointer">
+                    {% trans 'Entrar' %}
+                </a>
+                <a href="{% url 'register' %}"
+                   class="p-2 px-3 font-lg bg-yellow-400 text-gray-700 rounded-lg font-bold cursor-pointer">
+                    {% trans 'Registrar-se' %}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="border-b border-gray-300 dark:border-white"></div>
+</header>
