@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # my apps
     'twitter.apps.core',
     'twitter.apps.user',
+    'twitter.apps.twitter',
 
 ]
 

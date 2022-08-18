@@ -152,3 +152,5 @@ package-lock.json
 package.json
 
 static_src
+
+database
