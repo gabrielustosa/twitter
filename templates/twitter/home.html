@@ -36,11 +36,17 @@
                 <div class="flex">
                     <div class="m-2 w-10 py-1">
                         <img class="inline-block h-10 w-10 rounded-full"
-                             src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png" alt=""/>
+                             src="{% if user.is_authenticated %} {{ user.get_url_profile }} {% else %} https://icon-library.com/images/default-user-icon/default-user-icon-20.jpg {% endif %}"
+                             alt=""/>
                     </div>
                     <div class="flex-1 px-2 pt-2 mt-2">
-                    <textarea class=" bg-transparent text-gray-400 font-medium text-lg w-full" rows="2" cols="50"
-                              placeholder="What's happening?"></textarea>
+                        <form id="post-form" action="{% url 'twitter:post_tweet' %}" method="POST">
+                            {% csrf_token %}
+                            <textarea class="bg-transparent text-gray-400 font-medium text-lg w-full"
+                                      rows="2" cols="50" name="message"
+                                      placeholder="O que está acontecendo?">
+                            </textarea>
+                        </form>
                     </div>
                 </div>
                 <!--middle creat tweet below icons-->
@@ -98,7 +104,7 @@
                     </div>
 
                     <div class="flex-1">
-                        <button class="bg-blue-400 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full mr-8 float-right">
+                        <button type="submit" form="post-form" class="bg-blue-400 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full mr-8 float-right">
                             Tweet
                         </button>
                     </div>

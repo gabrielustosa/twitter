@@ -6,7 +6,7 @@ from .models import User
 class UserCreateForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'name', 'password1', 'password2')
+        fields = ('username', 'name', 'twitter_user', 'password1', 'password2')
         labels = {'username': 'E-mail'}
 
     def save(self, commit=True):
@@ -20,5 +20,5 @@ class UserCreateForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserCreateForm, self).__init__(*args, **kwargs)
 
-        for fieldname in ['username', 'password1', 'password2']:
+        for fieldname in self.Meta.fields:
             self.fields[fieldname].help_text = None

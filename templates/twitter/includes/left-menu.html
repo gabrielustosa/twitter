@@ -70,28 +70,32 @@
         </svg>
         More
     </a>
-
-    <button class="bg-blue-400 w-48 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full">
-        Tweet
-    </button>
 </nav>
 
-<div class="flex-shrink-0 flex hover:bg-blue-00 rounded-full p-4 mt-12 mr-2">
-    <a href="#" class="flex-shrink-0 group block">
-        <div class="flex items-center">
-            <div>
-                <img class="inline-block h-10 w-10 rounded-full"
-                     src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png"
-                     alt=""/>
+{% if user.is_authenticated %}
+    <div class="flex-shrink-0 flex hover:bg-blue-00 mt-5 rounded-full p-4 mr-2">
+        <a href="#" class="flex-shrink-0 group block">
+            <div class="flex items-center">
+                <div>
+                    <img class="inline-block h-10 w-10 rounded-full"
+                         src="{{ user.get_url_profile }}"
+                         alt=""/>
+                </div>
+                <div class="ml-3">
+                    <p class="text-base leading-6 font-medium text-white">
+                        {{ user.name }}
+                    </p>
+                    <p class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
+                        @{{ user.twitter_user }}
+                    </p>
+                </div>
             </div>
-            <div class="ml-3">
-                <p class="text-base leading-6 font-medium text-white">
-                    Sonali Hirave
-                </p>
-                <p class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                    @ShonaDesign
-                </p>
-            </div>
-        </div>
+        </a>
+    </div>
+{% else %}
+    <a href="{% url 'login' %}">
+        <button class="bg-blue-400 w-48 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full ml-2">
+            Login
+        </button>
     </a>
-</div>
+{% endif %}

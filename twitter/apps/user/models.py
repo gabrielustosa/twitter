@@ -39,10 +39,11 @@ class User(AbstractUser):
     )
     name = models.CharField(_('Name'), max_length=150)
     is_staff = models.BooleanField(_('Staff'), default=False)
+    twitter_user = models.CharField(_('Username'), max_length=50)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', ]
+    REQUIRED_FIELDS = ['name', 'twitter_user']
 
     def get_url_profile(self):
         name_parts = self.name.split(' ')

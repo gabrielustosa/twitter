@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 
 from twitter.apps.twitter.models import Tweet, Follow
@@ -16,11 +17,15 @@ class LoadTweetsView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        tweet_query = Tweet.objects.filter(parent=None)
+        tweet_query = Tweet.objects.root_nodes().order_by('-modified')
         if not user.is_anonymous:
-            following_users = Follow.objects.filter(follower=user).values_list('follower_id', flat=True)
-            return tweet_query.filter(creator__in=[following_users])
+            following_users = list(Follow.objects.filter(follower=user).values_list('follower_id', flat=True))
+            following_users.append(user.id)
+            return tweet_query.filter(creator__id__in=following_users)
         return tweet_query
 
-    def get_paginate_by(self, queryset):
-        return self.request.GET.get('page', self.paginate_by)
+
+@login_required
+def post_tweet_view(request):
+    Tweet.objects.create(message=request.POST.get('message'))
+    return redirect('/')
