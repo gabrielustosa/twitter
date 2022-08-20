@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
+from utils.profile import get_url_profile as util_get_url_profile
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -46,16 +48,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['name', 'twitter_user']
 
     def get_url_profile(self):
-        name_parts = self.name.split(' ')
-        first_name = name_parts[0]
-        last_name = None
-
-        if len(name_parts) > 1:
-            last_name = name_parts[1]
-
-        if last_name:
-            return f'https://ui-avatars.com/api/?name={first_name}+{last_name}&background=27272A&color=fff&format=png&font-size=0.5'
-        return f'https://ui-avatars.com/api/?name={first_name}&background=27272A&color=fff&format=png&font-size=0.5'
+        return util_get_url_profile(self.name)
 
     def __str__(self):
         return self.email
