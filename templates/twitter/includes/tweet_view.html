@@ -3,7 +3,7 @@
 <div
         class="flex items-center border-b px-4 py-3 sticky top-0 bg-white dark:bg-dim-900 border-l border-r border-gray-200 dark:border-gray-700 space-x-5"
 >
-    <i class="bi bi-arrow-left cursor-pointer"></i>
+    <a href="/"> <i class="bi bi-arrow-left cursor-pointer"></i></a>
     <h2 class="text-gray-800 dark:text-gray-100 font-bold font-sm">
         Tweet
     </h2>
@@ -32,7 +32,7 @@
     </div>
     <div class="pl-16">
         <p class="text-base width-auto font-medium text-gray-800 dark:text-white flex-shrink pb-3">
-            {{ tweet.message }}
+            {{ tweet.message|parse_tweet|safe }}
         </p>
         <div class="py-4 text-gray-600">
             {{ tweet.modified }}

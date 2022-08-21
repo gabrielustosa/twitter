@@ -14,9 +14,9 @@ hx-get="{% url 'twitter:view_tweet' tweet.id  %}" hx-target="#content">
                 </div>
                 <div class="ml-3">
                     <div class="flex items-center text-base leading-6 font-medium text-gray-800 dark:text-white space-x-2">
-                        <span> {{ tweet.creator_name }}</span>
-                        <span class="text-gray-400">@{{ tweet.creator_user }}</span>
-                        <span class="pl-2 text-gray-600"> {{ tweet.modified|date_since }}</span>
+                        <span class="hover:underline"> {{ tweet.creator_name }}</span>
+                        <span class="hover:underline text-gray-400">@{{ tweet.creator_user }}</span>
+                        <span class="hover:underline pl-2 text-gray-600"> {{ tweet.modified|date_since }}</span>
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@ hx-get="{% url 'twitter:view_tweet' tweet.id  %}" hx-target="#content">
     </div>
     <div class="pl-16">
         <p class="text-base width-auto font-medium text-gray-800 dark:text-white flex-shrink pb-3">
-            {{ tweet.message }}
+            {{ tweet.message|parse_tweet|safe }}
         </p>
 
         <div class="flex">
