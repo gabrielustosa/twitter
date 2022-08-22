@@ -4,6 +4,7 @@ from django.views.generic import ListView
 
 from twitter.apps.twitter.models import Tweet
 from twitter.apps.twitter.objects import TweetManageQuerySet
+from utils.tweet import parse_tweet
 
 
 def home_view(request):
@@ -23,7 +24,8 @@ class LoadTweetView(ListView):
 
 @login_required
 def post_tweet_view(request):
-    Tweet.objects.create(message=request.POST.get('message'))
+    parsed_tweet = parse_tweet(request.POST.get('message'))
+    Tweet.objects.create(message=parsed_tweet)
     return redirect('/')
 
 

@@ -16,7 +16,7 @@
             <span class="pl-2 text-gray-600 hover:underline"> {{ tweet_answer.modified|date_since }}</span>
         </div>
         <div class="flex py-1 text-gray-400 space-x-1">
-            Em resposta a {{ tweet_answer|tweet_ancestors_parsed|safe }}
+            Em resposta a {{ tweet_answer|tweet_ancestors_parsed }}
         </div>
     </div>
 {% endblock %}

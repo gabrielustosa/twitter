@@ -1,5 +1,6 @@
 from django import template
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 
 from utils.profile import get_url_profile as util_get_url_profile
 
@@ -44,22 +45,6 @@ def format_tweet_numbers(value):
 
 
 @register.filter()
-def parse_tweet(tweet):
-    words = [word for word in tweet.split() if word.startswith('@') or word.startswith('#') if len(word) > 1]
-
-    parsed_tweet = ''
-    for index, word_twitter in enumerate(tweet.split()):
-        new_word = tweet.split()[index]
-        for word in words:
-            if word == word_twitter:
-                wrapped_word = f'<a href="/user/{word}" class="text-blue-400 hover:underline">{word}</a>'
-                new_word = wrapped_word
-        parsed_tweet += f'{new_word} '
-
-    return parsed_tweet
-
-
-@register.filter()
 def tweet_ancestors_parsed(tweet):
     ancestors = tweet.get_ancestors(include_self=False)
 
@@ -71,5 +56,4 @@ def tweet_ancestors_parsed(tweet):
     if ancestors.count() > 2:
         ancestors_parsed += f' <span class="text-blue-400 hover:underline">e mais {ancestors.count()}</span>'
 
-    return ancestors_parsed
-
+    return mark_safe(ancestors_parsed)

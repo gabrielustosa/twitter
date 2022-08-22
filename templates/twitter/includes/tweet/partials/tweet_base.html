@@ -28,7 +28,7 @@
     <div class="pl-16">
         {% block tweet_message %}
             <p class="text-base width-auto font-medium text-gray-800 dark:text-white flex-shrink pb-3">
-                {{ tweet_message|parse_tweet|safe }}
+                {{ tweet_message|safe }}
             </p>
         {% endblock %}
         {% block tweet_statics_info %}
