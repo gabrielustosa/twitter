@@ -35,7 +35,8 @@ class TweetQuerySet(models.QuerySet):
             'creator__name',
             'creator__twitter_user',
             'modified',
-        ).annotate(total_coments=Count('children'), col_1=Value('None'), col_2=Value('None'), col_3=Value('None'))
+        ).annotate(total_coments=Count('children'), col_1=Value('None'), col_2=Value('None'), col_3=Value('None'),
+                   col_4=Value(0))
 
         tweet_action_query = tweet_action_query.values_list(
             'tweet__id',
@@ -45,9 +46,9 @@ class TweetQuerySet(models.QuerySet):
             'tweet__retweets',
             'tweet__creator__name',
             'tweet__creator__twitter_user',
-            'modified',
+            'tweet__modified',
         ).annotate(total_coments=Count('tweet__children'), action=F('action'), creator_name=F('creator__name'),
-                   creator_user=F('creator__twitter_user'))
+                   creator_user=F('creator__twitter_user'), action_answer_id=F('answer_id'))
 
         return tweet_query.union(tweet_action_query).order_by('-modified')
 
@@ -62,4 +63,5 @@ class Tweet(MPTTModel, CreatorBase, TimeStampedBase):
 
 class TweetAction(CreatorBase, TimeStampedBase):
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='answer')
     action = models.CharField(max_length=2, choices=Action.choices)

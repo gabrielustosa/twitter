@@ -29,6 +29,7 @@ class Tweet:
     action: str
     action_user_name: str
     action_user: str
+    action_answer_id: int
     template: str = field(init=False)
 
     def __post_init__(self):

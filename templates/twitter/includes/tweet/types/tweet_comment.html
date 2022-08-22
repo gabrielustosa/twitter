@@ -1,0 +1,29 @@
+{% extends 'twitter/includes/tweet/types/tweet_timeline.html' %}
+
+{% load twitter_filter %}
+
+{% block tweet_top %}
+    <div class="pt-3">
+        <div class="px-4 space-x-3 text-gray-400">
+            <i class="bi bi-chat"></i>
+            <span>{{ tweet.action_user_name }} comentou</span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block tweet_creator_profile %}
+    <img class="inline-block h-10 w-10 rounded-full"
+         src="{{ tweet.creator_name|get_url_profile }}"
+         alt=""/>
+    <div class="flex justify-center absolute" style="left: 50%;transform: translate(-50%, 0);">
+        <div style="border-left: 3px solid gray;height: 100px"></div>
+    </div>
+{% endblock %}
+
+{% block tweet_bottom %}
+    <div id="tweet-answer-{{ tweet.action_answer_id }}"></div>
+
+    <script>
+        htmx.ajax('GET', '{% url 'twitter:get_tweet' tweet.action_answer_id %}', '#tweet-answer-{{ tweet.action_answer_id }}')
+    </script>
+{% endblock %}

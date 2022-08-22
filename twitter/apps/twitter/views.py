@@ -1,8 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
+from django.forms.models import model_to_dict
 
-from twitter.apps.twitter.models import Tweet
+from twitter.apps.twitter.constants import Action
+from twitter.apps.twitter.models import Tweet, TweetAction
 from twitter.apps.twitter.objects import TweetManageQuerySet
 from utils.tweet import parse_tweet
 
@@ -40,7 +44,10 @@ def tweet_view(request, tweet_id):
 
 def answer_tweet(request, tweet_id):
     parsed_tweet = parse_tweet(request.POST.get('message'))
-    Tweet.objects.create(message=parsed_tweet, parent_id=tweet_id)
+    tweet_main = Tweet.objects.get(id=tweet_id)
+    tweet = Tweet.objects.create(message=parsed_tweet, parent_id=tweet_id)
+    if tweet_main.is_root_node():
+        TweetAction.objects.create(tweet_id=tweet_id, action=Action.COMMENT, answer=tweet)
     return tweet_view(request, tweet_id)
 
 
@@ -58,3 +65,8 @@ class LoadTweetAnswer(ListView):
         context = super().get_context_data()
         context['twitter_id'] = self.kwargs.get('tweet_id')
         return context
+
+
+def get_tweet(request, tweet_id):
+    tweet = Tweet.objects.filter(id=tweet_id).annotate(comments=Count('children')).first()
+    return render(request, 'twitter/includes/tweet/types/tweet_normal.html', context={'tweet': tweet})
