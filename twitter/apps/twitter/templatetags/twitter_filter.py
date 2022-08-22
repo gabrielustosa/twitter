@@ -46,7 +46,7 @@ def format_tweet_numbers(value):
 
 @register.filter()
 def tweet_ancestors_parsed(tweet):
-    ancestors = tweet.get_ancestors(include_self=False)
+    ancestors = tweet.get_ancestors().order_by('creator').distinct('creator')
 
     two = ancestors[0:2]
 

@@ -1,0 +1,36 @@
+{% extends 'twitter/includes/tweet/partials/tweet_base.html' %}
+
+{% load twitter_filter %}
+
+{% block click_on_tweet %}
+    _="on click call viewTweet({{ tweet.id }})"
+{% endblock %}
+
+{% block tweet_creator_profile %}
+    {% with tweet_creator_profile=tweet.creator.get_url_profile %}
+        <img class="inline-block h-10 w-10 rounded-full"
+             src="{{ tweet_creator_profile }}"
+             alt=""/>
+        <div class="flex justify-center absolute" style="left: 50%;transform: translate(-50%, 0);">
+            <div style="border-left: 3px solid gray;height: 100px"></div>
+        </div>
+    {% endwith %}
+{% endblock %}
+
+{% block tweet_info %}
+    {% with tweet_creator_name=tweet.creator.name tweet_creator_user=tweet.creator.twitter_user tweet_modified=tweet.modified %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block tweet_message %}
+    {% with tweet_message=tweet.message %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block tweet_statics_info %}
+    {% with tweet_comments=tweet.get_children.count tweet_retweets=tweet.retweets tweet_likes=tweet.likes %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}

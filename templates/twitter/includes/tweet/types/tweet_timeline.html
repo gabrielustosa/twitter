@@ -3,7 +3,7 @@
 {% load twitter_filter %}
 
 {% block click_on_tweet %}
-    hx-get="{% url 'twitter:view_tweet' tweet.id  %}" hx-target="#content"
+    _="on click call viewTweet({{ tweet.id }})"
 {% endblock %}
 
 {% block tweet_creator_profile %}

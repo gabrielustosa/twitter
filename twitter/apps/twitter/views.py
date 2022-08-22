@@ -30,16 +30,17 @@ def post_tweet_view(request):
 
 
 def tweet_view(request, tweet_id):
-    tweet = get_object_or_404(Tweet, id=tweet_id)
-
-    return render(request, 'twitter/includes/tweet/types/tweet_view.html', context={'tweet': tweet})
+    tweet_main = get_object_or_404(Tweet, id=tweet_id)
+    tweet_ancestors = tweet_main.get_ancestors()
+    return render(request, 'twitter/includes/tweet/tweet_view.html', context={
+        'tweet_main': tweet_main,
+        'tweet_ancestors': tweet_ancestors,
+    })
 
 
 def answer_tweet(request, tweet_id):
-    tweet = get_object_or_404(Tweet, id=tweet_id)
-
-    Tweet.objects.create(message=request.POST.get('message'), parent=tweet)
-
+    parsed_tweet = parse_tweet(request.POST.get('message'))
+    Tweet.objects.create(message=parsed_tweet, parent_id=tweet_id)
     return tweet_view(request, tweet_id)
 
 
@@ -47,7 +48,7 @@ class LoadTweetAnswer(ListView):
     template_name = 'twitter/includes/tweet/load_tweet_answer.html'
     model = Tweet
     paginate_by = 5
-    context_object_name = 'tweets_answers'
+    context_object_name = 'tweets'
 
     def get_queryset(self):
         tweet = Tweet.objects.get(id=self.kwargs.get('tweet_id'))

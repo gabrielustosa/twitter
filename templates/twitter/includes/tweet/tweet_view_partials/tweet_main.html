@@ -1,0 +1,34 @@
+{% extends 'twitter/includes/tweet/partials/tweet_base.html' %}
+
+{% block click_on_tweet %}
+    _="on click call viewTweet({{ tweet.id }})"
+{% endblock %}
+
+{% block tweet_creator_profile %}
+    {% with tweet_creator_profile=tweet_main.creator.get_url_profile %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block tweet_info %}
+    <div class="flex items-center text-base leading-6 font-medium text-gray-800 dark:text-white space-x-2">
+        <span> {{ tweet_main.creator.name }}</span>
+        <span class="text-gray-400">@{{ tweet_main.creator.twitter_user }}</span>
+    </div>
+{% endblock %}
+
+{% block tweet_message %}
+    {% with tweet_message=tweet_main.message %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block tweet_statics_info %}
+    <div class="py-4 text-gray-600">
+        {{ tweet_main.modified }}
+    </div>
+    <div class="py-4 space-x-4">
+        <span>{{ tweet_main.likes }} <span class="text-gray-500 text-sm">Likes</span></span>
+        <span>{{ tweet_main.retweets }} <span class="text-gray-500 text-sm">Retweets</span></span>
+    </div>
+{% endblock %}

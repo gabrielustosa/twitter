@@ -6,12 +6,12 @@
                  alt=""/>
         </div>
         <div class="w-full p-2">
-            <form hx-post="{% url 'twitter:answer_tweet' tweet.id %}" hx-target="#content">
+            <form hx-post="{% url 'twitter:answer_tweet' tweet.id %}" hx-target="#container">
                 {% csrf_token %}
                 <textarea
                         class="dark:text-white text-gray-900 placeholder-gray-400 w-full h-10 bg-transparent border-0 focus:outline-none resize-none border-transparent focus:border-transparent focus:ring-0"
-                        placeholder="Responder" name="message">
-                    </textarea>
+                        placeholder="Responder" name="message"
+                ></textarea>
                 <button type="submit"
                         class="flex justify-end bg-blue-400 hover:bg-blue-500 text-white rounded-full py-1 px-4 ml-auto mr-1">
                     <span class="font-bold text-sm">Responder</span>
