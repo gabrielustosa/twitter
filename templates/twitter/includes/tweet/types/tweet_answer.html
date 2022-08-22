@@ -1,0 +1,34 @@
+{% extends 'twitter/includes/tweet/partials/tweet_base.html' %}
+
+{% load twitter_filter %}
+
+{% block tweet_creator_profile %}
+    {% with tweet_creator_profile=tweet_answer.creator.get_url_profile %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block tweet_info %}
+    <div class="text-base leading-6 font-medium text-gray-800 dark:text-white">
+        <div class="flex items-center space-x-2">
+            <span class="hover:underline"> {{ tweet_answer.creator.name }}</span>
+            <span class="text-gray-400 hover:underline">@{{ tweet_answer.creator.twitter_user }}</span>
+            <span class="pl-2 text-gray-600 hover:underline"> {{ tweet_answer.modified|date_since }}</span>
+        </div>
+        <div class="flex py-1 text-gray-400 space-x-1">
+            Em resposta a {{ tweet_answer|tweet_ancestors_parsed|safe }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block tweet_message %}
+    {% with tweet_message=tweet.message %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block tweet_statics_info %}
+    {% with tweet_comments=tweet_answer.get_children.count tweet_retweets=tweet_answer.retweets tweet_likes=tweet_answer.likes %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}

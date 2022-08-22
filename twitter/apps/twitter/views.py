@@ -11,7 +11,7 @@ def home_view(request):
 
 
 class LoadTweetView(ListView):
-    template_name = 'twitter/includes/tweet.html'
+    template_name = 'twitter/includes/tweet/load_tweet.html'
     model = Tweet
     paginate_by = 5
     context_object_name = 'tweets'
@@ -30,7 +30,7 @@ def post_tweet_view(request):
 def tweet_view(request, tweet_id):
     tweet = get_object_or_404(Tweet, id=tweet_id)
 
-    return render(request, 'twitter/includes/tweet_view.html', context={'tweet': tweet})
+    return render(request, 'twitter/includes/tweet/types/tweet_view.html', context={'tweet': tweet})
 
 
 def answer_tweet(request, tweet_id):
@@ -42,7 +42,7 @@ def answer_tweet(request, tweet_id):
 
 
 class LoadTweetAnswer(ListView):
-    template_name = 'twitter/includes/tweet_answer.html'
+    template_name = 'twitter/includes/tweet/load_tweet_answer.html'
     model = Tweet
     paginate_by = 5
     context_object_name = 'tweets_answers'

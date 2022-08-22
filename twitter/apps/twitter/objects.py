@@ -33,9 +33,9 @@ class Tweet:
 
     def __post_init__(self):
         templates = {
-            'None': 'twitter/includes/tweet_bases/tweet.html',
-            '1': 'twitter/includes/tweet_bases/tweet_retweet.html',
-            '2': 'twitter/includes/tweet_bases/tweet_like.html',
-            '3': 'twitter/includes/tweet_bases/tweet_comment.html',
+            'None': 'twitter/includes/tweet/types/tweet_timeline.html',
+            '1': 'twitter/includes/tweet/types/tweet_retweet.html',
+            '2': 'twitter/includes/tweet/types/tweet_like.html',
+            '3': 'twitter/includes/tweet/types/tweet_comment.html',
         }
         self.template = templates[self.action]
