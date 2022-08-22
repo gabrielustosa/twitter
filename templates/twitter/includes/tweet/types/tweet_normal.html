@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block tweet_statics_info %}
-    {% with tweet_comments=tweet.comments tweet_retweets=tweet.retweets tweet_likes=tweet.likes %}
+    {% with tweet_comments=tweet.comments tweet_retweets=tweet.retweets.count tweet_likes=tweet.likes.count %}
         {{ block.super }}
     {% endwith %}
 {% endblock %}

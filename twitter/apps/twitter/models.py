@@ -30,8 +30,8 @@ class TweetQuerySet(models.QuerySet):
             'id',
             'parent',
             'message',
-            'likes',
-            'retweets',
+            Count('likes'),
+            Count('retweets'),
             'creator__name',
             'creator__twitter_user',
             'modified',
@@ -42,8 +42,8 @@ class TweetQuerySet(models.QuerySet):
             'tweet__id',
             'tweet__parent',
             'tweet__message',
-            'tweet__likes',
-            'tweet__retweets',
+            Count('tweet__likes'),
+            Count('tweet__retweets'),
             'tweet__creator__name',
             'tweet__creator__twitter_user',
             'tweet__modified',
@@ -55,13 +55,21 @@ class TweetQuerySet(models.QuerySet):
 
 class Tweet(MPTTModel, CreatorBase, TimeStampedBase):
     message = models.TextField()
-    likes = models.PositiveIntegerField(default=0)
-    retweets = models.PositiveIntegerField(default=0)
+    likes = models.ManyToManyField(
+        User,
+        related_name='tweets_liked',
+        blank=True
+    )
+    retweets = models.ManyToManyField(
+        User,
+        related_name='tweets_retweeted',
+        blank=True
+    )
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     timeline_objects = TweetQuerySet.as_manager()
 
 
 class TweetAction(CreatorBase, TimeStampedBase):
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
-    answer = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='answer')
+    answer = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='answer', null=True)
     action = models.CharField(max_length=2, choices=Action.choices)

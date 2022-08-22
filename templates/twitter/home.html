@@ -25,11 +25,14 @@
         if (document.querySelector('#tweets-spot'))
             htmx.ajax('GET', '{% url 'twitter:load_tweets' %}', '#tweets-spot')
 
-        function viewTweet(tweet_id) {
-            if (tweet_id !== undefined) {
-                htmx.ajax('GET', `/tweet/${tweet_id}`, '#container').then(() => {
-                    window.history.pushState("", "", `/tweet/${tweet_id}`);
-                })
+        function viewTweet(event, tweet_id) {
+            let clicked_element = event.path[0]
+            if (!clicked_element.hasAttribute('do-nothing')) {
+                if (tweet_id !== undefined) {
+                    htmx.ajax('GET', `/tweet/${tweet_id}`, '#container').then(() => {
+                        window.history.pushState("", "", `/tweet/${tweet_id}`);
+                    })
+                }
             }
         }
     </script>

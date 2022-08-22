@@ -4,9 +4,9 @@
 
 {% block tweet_top %}
     <div class="pt-3">
-        <div class="px-4 space-x-3 text-gray-400">
+        <div class="px-4 space-x-3 text-gray-400 group cursor-pointer">
             <i class="bi bi-chat"></i>
-            <span>{{ tweet.action_user_name }} comentou</span>
+            <span class="group-hover:underline">{{ tweet.action_user_name }} comentou</span>
         </div>
     </div>
 {% endblock %}

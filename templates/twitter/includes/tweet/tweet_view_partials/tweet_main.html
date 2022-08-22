@@ -1,9 +1,5 @@
 {% extends 'twitter/includes/tweet/partials/tweet_base.html' %}
 
-{% block click_on_tweet %}
-    _="on click call viewTweet({{ tweet.id }})"
-{% endblock %}
-
 {% block tweet_creator_profile %}
     {% with tweet_creator_profile=tweet_main.creator.get_url_profile %}
         {{ block.super }}
@@ -28,7 +24,7 @@
         {{ tweet_main.modified }}
     </div>
     <div class="py-4 space-x-4">
-        <span>{{ tweet_main.likes }} <span class="text-gray-500 text-sm">Likes</span></span>
-        <span>{{ tweet_main.retweets }} <span class="text-gray-500 text-sm">Retweets</span></span>
+        <span>{{ tweet_main.likes.count }} <span class="text-gray-500 text-sm">Likes</span></span>
+        <span>{{ tweet_main.retweets.count }} <span class="text-gray-500 text-sm">Retweets</span></span>
     </div>
 {% endblock %}

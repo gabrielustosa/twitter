@@ -2,6 +2,7 @@ from django import template
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 
+from twitter.apps.twitter.models import Tweet
 from utils.profile import get_url_profile as util_get_url_profile
 
 register = template.Library()
@@ -57,3 +58,9 @@ def tweet_ancestors_parsed(tweet):
         ancestors_parsed += f' <span class="text-blue-400 hover:underline">e mais {ancestors.count()}</span>'
 
     return mark_safe(ancestors_parsed)
+
+
+@register.filter()
+def has_liked(user, tweet_id):
+    tweet = Tweet.objects.get(id=tweet_id)
+    return tweet.likes.filter(id=user.id).exists()

@@ -70,3 +70,18 @@ class LoadTweetAnswer(ListView):
 def get_tweet(request, tweet_id):
     tweet = Tweet.objects.filter(id=tweet_id).annotate(comments=Count('children')).first()
     return render(request, 'twitter/includes/tweet/types/tweet_normal.html', context={'tweet': tweet})
+
+
+def like_tweet_view(request, tweet_id):
+    tweet = Tweet.objects.get(id=tweet_id)
+    if tweet.likes.filter(id=request.user.id).exists():
+        tweet.likes.remove(request.user)
+        if tweet.is_root_node():
+            TweetAction.objects.filter(tweet_id=tweet_id, action=Action.LIKE).delete()
+    else:
+        tweet.likes.add(request.user)
+        if tweet.is_root_node():
+            TweetAction.objects.create(tweet_id=tweet_id, action=Action.LIKE)
+
+    return render(request, 'twitter/includes/tweet/partials/tweet_like.html',
+                  context={'tweet_likes': tweet.likes.count(), 'tweet': tweet})

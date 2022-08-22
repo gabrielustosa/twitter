@@ -3,7 +3,7 @@
 {% load twitter_filter %}
 
 {% block click_on_tweet %}
-    _="on click call viewTweet({{ tweet.id }})"
+    _="on click call viewTweet(event, {{ tweet.id }})"
 {% endblock %}
 
 {% block tweet_creator_profile %}
