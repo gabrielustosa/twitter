@@ -4,8 +4,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
 
 from twitter.apps.twitter.constants import Action
-from twitter.apps.twitter.models import Tweet, TweetAction
+from twitter.apps.twitter.models import Tweet, TweetAction, Follow
 from twitter.apps.twitter.objects import TweetManageQuerySet
+from twitter.apps.user.models import User
 from utils.tweet import parse_tweet
 
 
@@ -98,3 +99,24 @@ def retweet_tweet_view(request, tweet_id):
 
     return render(request, 'twitter/includes/tweet/partials/tweet_retweet.html',
                   context={'tweet_retweets': tweet.retweets.count(), 'tweet': tweet})
+
+
+def user_view(request, user):
+    user = get_object_or_404(User, user=user)
+    return render(request, 'twitter/includes/user/profile.html', context={'twitter_user': user})
+
+
+class LoadUserTweets(ListView):
+    template_name = 'twitter/includes/tweet/load_user_tweets.html'
+    model = Tweet
+    paginate_by = 5
+    context_object_name = 'tweets'
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return Tweet.objects.filter(creator__id=user_id).annotate(comments=Count('children'))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['user_id'] = self.kwargs.get('user_id')
+        return context

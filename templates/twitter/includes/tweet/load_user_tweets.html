@@ -1,0 +1,9 @@
+{% for tweet in tweets %}
+    {% if forloop.last %}
+        <div hx-get="{% url 'twitter:load_user_tweets' user_id  %}?page={{ page_obj.number|add:'1' }}"
+             hx-trigger="revealed"
+             hx-swap="afterend">
+        </div>
+    {% endif %}
+    {% include 'twitter/includes/tweet/types/tweet_normal.html' %}
+{% endfor %}

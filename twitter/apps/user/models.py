@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
+from twitter.apps.core.models import TimeStampedBase
 from utils.profile import get_url_profile as util_get_url_profile
 
 
@@ -34,14 +35,15 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class User(AbstractUser):
+class User(AbstractUser, TimeStampedBase):
     email = models.EmailField(
         _('E-mail'),
         unique=True
     )
     name = models.CharField(_('Name'), max_length=150)
     is_staff = models.BooleanField(_('Staff'), default=False)
-    user = models.CharField(_('Username'), max_length=50)
+    user = models.CharField(_('Username'), max_length=50, unique=True)
+    bio = models.TextField()
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

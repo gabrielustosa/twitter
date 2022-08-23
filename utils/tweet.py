@@ -14,7 +14,7 @@ def parse_tweet(tweet):
                 if word.startswith('@'):
                     if not User.objects.filter(user__iexact=word[1:]).exists():
                         continue
-                wrapped_word = f'<a href="/user/{word}" class="text-blue-400 hover:underline">{word}</a>'
+                wrapped_word = f'<a href="/user/{word[1:]}" class="text-blue-400 hover:underline">{word}</a>'
                 new_word = wrapped_word
         parsed_tweet += f'{new_word} '
 
