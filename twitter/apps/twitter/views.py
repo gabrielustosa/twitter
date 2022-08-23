@@ -1,9 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
-from django.forms.models import model_to_dict
 
 from twitter.apps.twitter.constants import Action
 from twitter.apps.twitter.models import Tweet, TweetAction
@@ -85,3 +83,18 @@ def like_tweet_view(request, tweet_id):
 
     return render(request, 'twitter/includes/tweet/partials/tweet_like.html',
                   context={'tweet_likes': tweet.likes.count(), 'tweet': tweet})
+
+
+def retweet_tweet_view(request, tweet_id):
+    tweet = Tweet.objects.get(id=tweet_id)
+    if tweet.retweets.filter(id=request.user.id).exists():
+        tweet.retweets.remove(request.user)
+        if tweet.is_root_node():
+            TweetAction.objects.filter(tweet_id=tweet_id, action=Action.RETWEET).delete()
+    else:
+        tweet.retweets.add(request.user)
+        if tweet.is_root_node():
+            TweetAction.objects.create(tweet_id=tweet_id, action=Action.RETWEET)
+
+    return render(request, 'twitter/includes/tweet/partials/tweet_retweet.html',
+                  context={'tweet_retweets': tweet.retweets.count(), 'tweet': tweet})

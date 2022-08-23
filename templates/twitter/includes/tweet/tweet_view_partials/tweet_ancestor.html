@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block tweet_info %}
-    {% with tweet_creator_name=tweet.creator.name tweet_creator_user=tweet.creator.twitter_user tweet_modified=tweet.modified %}
+    {% with tweet_creator_name=tweet.creator.name tweet_creator_user=tweet.creator.user tweet_modified=tweet.modified %}
         {{ block.super }}
     {% endwith %}
 {% endblock %}

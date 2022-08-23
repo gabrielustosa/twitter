@@ -45,7 +45,7 @@ class User(AbstractUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'twitter_user']
+    REQUIRED_FIELDS = ['name', 'user']
 
     def get_url_profile(self):
         return util_get_url_profile(self.name)
