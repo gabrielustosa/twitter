@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Value, Q, Count, F
+from django.db.models import Value, Q, Count, F, Case, When, Sum
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
@@ -26,29 +26,41 @@ class TweetQuerySet(models.QuerySet):
                 Q(tweet__creator__id__in=following_users) | Q(creator__id=user.id)
             )
 
-        tweet_query = tweet_query.values_list(
-            'id',
-            'parent',
-            'message',
-            Count('likes'),
-            Count('retweets'),
-            'creator__name',
-            'creator__twitter_user',
-            'modified',
-        ).annotate(total_coments=Count('children'), col_1=Value('None'), col_2=Value('None'), col_3=Value('None'),
-                   col_4=Value(0))
+        tweet_query = tweet_query.values_list('id').annotate(
+            parent=F('parent'),
+            message=F('message'),
+            likes=Count('likes'),
+            retweets=Count('retweets'),
+            comments=Count('children'),
+            creator_name=F('creator__name'),
+            creator_user=F('creator__user'),
+            modified=F('modified'),
+            action=Value('None'),
+            action_creator=Value('None'),
+            action_user=Value('None'),
+            answer_id=Value(0),
+            template=Value('twitter/includes/tweet/types/tweet_timeline.html')
+        )
 
-        tweet_action_query = tweet_action_query.values_list(
-            'tweet__id',
-            'tweet__parent',
-            'tweet__message',
-            Count('tweet__likes'),
-            Count('tweet__retweets'),
-            'tweet__creator__name',
-            'tweet__creator__twitter_user',
-            'tweet__modified',
-        ).annotate(total_coments=Count('tweet__children'), action=F('action'), creator_name=F('creator__name'),
-                   creator_user=F('creator__twitter_user'), action_answer_id=F('answer_id'))
+        tweet_action_query = tweet_action_query.values_list('tweet__id').annotate(
+            parent=F('tweet__parent'),
+            message=F('tweet__message'),
+            likes=Count('tweet__likes'),
+            retweets=Count('tweet__retweets'),
+            comments=Count('tweet__children'),
+            creator_name=F('tweet__creator__name'),
+            creator_user=F('tweet__creator__user'),
+            modified=F('tweet__modified'),
+            action=F('action'),
+            action_creator=F('creator__name'),
+            action_user=F('creator__user'),
+            answer_id=F('answer_id'),
+            template=Case(
+                When(action=Action.RETWEET, then=Value('twitter/includes/tweet/types/tweet_retweet.html')),
+                When(action=Action.LIKE, then=Value('twitter/includes/tweet/types/tweet_like.html')),
+                When(action=Action.COMMENT, then=Value('twitter/includes/tweet/types/tweet_comment.html')),
+            )
+        )
 
         return tweet_query.union(tweet_action_query).order_by('-modified')
 

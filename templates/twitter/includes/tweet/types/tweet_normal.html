@@ -1,7 +1,7 @@
 {% extends 'twitter/includes/tweet/partials/tweet_base.html' %}
 
 {% block click_on_tweet %}
-    _="on click call viewTweet({{ tweet.id }})"
+    _="on click call viewTweet(event, {{ tweet.id }})"
 {% endblock %}
 
 {% block tweet_creator_profile %}
@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block tweet_info %}
-    {% with tweet_creator_name=tweet.creator.name tweet_creator_user=tweet.creator.twitter_user tweet_modified=tweet.modified %}
+    {% with tweet_creator_name=tweet.creator.name tweet_creator_user=tweet.creator.user tweet_modified=tweet.modified %}
         {{ block.super }}
     {% endwith %}
 {% endblock %}

@@ -41,7 +41,7 @@ class User(AbstractUser):
     )
     name = models.CharField(_('Name'), max_length=150)
     is_staff = models.BooleanField(_('Staff'), default=False)
-    twitter_user = models.CharField(_('Username'), max_length=50)
+    user = models.CharField(_('Username'), max_length=50)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

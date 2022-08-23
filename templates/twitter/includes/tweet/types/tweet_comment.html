@@ -6,7 +6,7 @@
     <div class="pt-3">
         <div class="px-4 space-x-3 text-gray-400 group cursor-pointer">
             <i class="bi bi-chat"></i>
-            <span class="group-hover:underline">{{ tweet.action_user_name }} comentou</span>
+            <span class="group-hover:underline">{{ tweet.action_creator }} comentou</span>
         </div>
     </div>
 {% endblock %}
@@ -21,9 +21,9 @@
 {% endblock %}
 
 {% block tweet_bottom %}
-    <div id="tweet-answer-{{ tweet.action_answer_id }}"></div>
+    <div id="tweet-answer-{{ tweet.answer_id }}"></div>
 
     <script>
-        htmx.ajax('GET', '{% url 'twitter:get_tweet' tweet.action_answer_id %}', '#tweet-answer-{{ tweet.action_answer_id }}')
+        htmx.ajax('GET', '{% url 'twitter:get_tweet' tweet.answer_id %}', '#tweet-answer-{{ tweet.answer_id }}')
     </script>
 {% endblock %}

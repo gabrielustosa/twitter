@@ -6,7 +6,7 @@ from .models import User
 class UserCreateForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'name', 'twitter_user', 'password1', 'password2')
+        fields = ('username', 'name', 'user', 'password1', 'password2')
         labels = {'username': 'E-mail'}
 
     def save(self, commit=True):
