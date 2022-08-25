@@ -1,3 +1,4 @@
+from django.conf.global_settings import MEDIA_URL
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
@@ -30,8 +31,11 @@ class Tweet(MPTTModel, CreatorBase, TimeStampedBase):
 
 
 class TweetImage(models.Model):
-    image = models.ImageField(upload_to='avatars')
-    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='tweet_images/%m')
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='images')
+
+    def get_absolute_url(self):
+        return '%s%s' % (MEDIA_URL, self.image.url)
 
 
 class TweetAction(CreatorBase, TimeStampedBase):

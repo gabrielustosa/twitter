@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-from django.db.models import QuerySet, Value, Q, Count, F, Case, When
+from django.db.models import QuerySet, Value, Q, Count, F, Case, When, Subquery, Sum
 
 twitter_values = ('id', 'parent', 'message', 'likes', 'retweets',
                   'comments', 'creator_name', 'creator_user',
                   'modified', 'action', 'action_creator',
-                  'action_user', 'answer_id', 'order_date', 'template')
+                  'action_user', 'answer_id', 'images', 'order_date', 'template')
 
 
 @dataclass
@@ -26,6 +26,27 @@ class TweetQuerySet(QuerySet):
 
         tweet_query = Tweet.objects.root_nodes()
 
+        tweet_query = tweet_query.values_list('id').annotate(
+            parent=F('parent'),
+            message=F('message'),
+            likes=Count('likes', distinct=True),
+            retweets=Count('retweets', distinct=True),
+            comments=Count('children', distinct=True),
+            creator_name=F('creator__name'),
+            creator_user=F('creator__user'),
+            modified=F('modified'),
+            action=Value('Nones'),
+            action_creator=Value('None'),
+            action_user=Value('Non'),
+            answer_id=Value(0),
+            images=Sum('images'),
+            order_date=F('created'),
+            template=Value('twitter/includes/tweet/types/tweet_timeline.html')
+        )
+
+        if user.is_anonymous:
+            return tweet_query
+
         if user.is_authenticated:
             following_users = user.following.values_list('user_id')
 
@@ -35,9 +56,9 @@ class TweetQuerySet(QuerySet):
             tweet_action_query = tweet_action_query.values_list('tweet__id').annotate(
                 parent=F('tweet__parent'),
                 message=F('tweet__message'),
-                likes=Count('likes'),
-                retweets=Count('tweet__retweets'),
-                comments=Count('tweet__children'),
+                likes=Count('tweet__likes', distinct=True),
+                retweets=Count('tweet__retweets', distinct=True),
+                comments=Count('tweet__children', distinct=True),
                 creator_name=F('tweet__creator__name'),
                 creator_user=F('tweet__creator__user'),
                 modified=F('tweet__modified'),
@@ -45,6 +66,7 @@ class TweetQuerySet(QuerySet):
                 action_creator=F('creator__name'),
                 action_user=F('creator__user'),
                 answer_id=F('answer_id'),
+                images=Sum('tweet__images'),
                 order_date=F('created'),
                 template=Case(
                     When(action=Action.RETWEET, then=Value('twitter/includes/tweet/types/tweet_retweet.html')),
@@ -53,24 +75,4 @@ class TweetQuerySet(QuerySet):
                 )
             )
 
-        tweet_query = tweet_query.values_list('id').annotate(
-            parent=F('parent'),
-            message=F('message'),
-            likes=Count('likes'),
-            retweets=Count('retweets'),
-            comments=Count('children'),
-            creator_name=F('creator__name'),
-            creator_user=F('creator__user'),
-            modified=F('modified'),
-            action=Value('Nones'),
-            action_creator=Value('None'),
-            action_user=Value('Non'),
-            answer_id=Value(0),
-            order_date=F('created'),
-            template=Value('twitter/includes/tweet/types/tweet_timeline.html')
-        )
-
-        if user.is_anonymous:
-            return tweet_query.order_by('-order_date')
-
-        return tweet_query.order_by('-order_date')
+            return tweet_query.union(tweet_action_query).order_by('-order_date')

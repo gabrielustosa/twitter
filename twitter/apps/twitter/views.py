@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
 
 from twitter.apps.twitter.constants import Action
-from twitter.apps.twitter.models import Tweet, TweetAction
+from twitter.apps.twitter.models import Tweet, TweetAction, TweetImage
 from twitter.apps.twitter.queryset import TweetManageQuerySet
 from twitter.apps.user.models import User
 from utils.tweet import parse_tweet
@@ -27,9 +27,12 @@ class LoadTweetView(ListView):
 
 @login_required
 def post_tweet_view(request):
-    images = request.FILES.getlist(key='images')
     parsed_tweet = parse_tweet(request.POST.get('message'))
-    Tweet.objects.create(message=parsed_tweet)
+    tweet = Tweet.objects.create(message=parsed_tweet)
+
+    images = request.FILES.getlist(key='images')
+    [TweetImage.objects.create(image=image, tweet=tweet) for image in images[0:4]]
+
     return redirect('/')
 
 
