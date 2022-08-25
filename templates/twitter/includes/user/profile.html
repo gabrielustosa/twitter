@@ -1,5 +1,7 @@
 {% extends 'twitter/home.html' %}
 
+{% load twitter_filter %}
+
 {% block middle-content %}
     <main role="main">
         <div class="flex" style="width: 990px;">
@@ -31,10 +33,25 @@
                                 </div>
                             </div>
                             {% if user == twitter_user %}
-                                <div class="flex flex-col text-right">
-                                    <button class="flex justify-center  max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:border-blue-800 flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
+                                <div class="flex text-right">
+                                    <button class="flex justify-center max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:border-blue-800 flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
                                         Edit Profile
                                     </button>
+                                </div>
+                            {% else %}
+                                <div class="flex text-right space-x-5">
+                                    <button class="bg-gray-400 hover:bg-gray-500 py-2 px-4 text-white font-bold font-sm transition duration-350 ease-in-out rounded-2xl">
+                                        <i class="bi bi-chat-left"></i>
+                                    </button>
+                                    {% if twitter_user|is_following:user %}
+                                        <button class="bg-blue-400 hover:bg-blue-500 py-2 px-4 text-white font-bold font-sm transition duration-350 ease-in-out rounded-2xl">
+                                            Deixar de seguir
+                                        </button>
+                                    {% else %}
+                                        <button class="bg-blue-400 hover:bg-blue-500 py-2 px-4 text-white font-bold font-sm transition duration-350 ease-in-out rounded-2xl">
+                                            Seguir
+                                        </button>
+                                    {% endif %}
                                 </div>
                             {% endif %}
                         </div>
@@ -68,10 +85,12 @@
                                 </div>
                             </div>
                             <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid">
-                                <div class="text-center pr-4"><span class="font-bold">520</span>
+                                <div class="text-center pr-4"><span
+                                        class="font-bold">{{ twitter_user.following.count }}</span>
                                     <span class="text-gray-600"> Seguindo</span>
                                 </div>
-                                <div class="text-center  px-4 pr-6"><span class="font-bold">23,4m </span>
+                                <div class="text-center  px-4 pr-6"><span
+                                        class="font-bold">{{ twitter_user.followers.count }}</span>
                                     <span class="text-gray-600"> Seguidores</span>
                                 </div>
                             </div>

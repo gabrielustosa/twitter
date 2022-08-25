@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_tailwind',
     'theme',
+    'imagekit',
 
     # my apps
     'twitter.apps.core',

@@ -16,7 +16,8 @@
                 <div class="ml-3">
                     {% block tweet_info %}
                         <div class="flex items-center text-base leading-6 font-medium text-gray-800 dark:text-white space-x-2">
-                            <span class="hover:underline"> {{ tweet_creator_name }}</span>
+                            <a href="{% url 'twitter:user' tweet_creator_user %}"
+                               class="hover:underline"> {{ tweet_creator_name }}</a>
                             <a href="{% url 'twitter:user' tweet_creator_user %}" class="hover:underline text-gray-400">@{{ tweet_creator_user }}</a>
                             <span class="hover:underline pl-2 text-gray-600"> {{ tweet_modified|date_since }}</span>
                         </div>

@@ -65,7 +65,13 @@ def has_liked(user, tweet_id):
     tweet = Tweet.objects.get(id=tweet_id)
     return tweet.likes.filter(id=user.id).exists()
 
+
 @register.filter()
 def has_retweeted(user, tweet_id):
     tweet = Tweet.objects.get(id=tweet_id)
     return tweet.retweets.filter(id=user.id).exists()
+
+
+@register.filter()
+def is_following(user, follower):
+    return user.followers.filter(follower=follower).exists()
