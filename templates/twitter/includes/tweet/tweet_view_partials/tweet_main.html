@@ -3,30 +3,30 @@
 {% load twitter_filter %}
 
 {% block tweet_creator_profile %}
-    {% with tweet_creator_profile=tweet_main.creator.get_url_profile %}
+    {% with tweet_creator_profile=tweet.creator.get_url_profile %}
         {{ block.super }}
     {% endwith %}
 {% endblock %}
 
 {% block tweet_info %}
     <div class="flex items-center text-base leading-6 font-medium text-gray-800 dark:text-white space-x-2">
-        <span class="hover:underline"> {{ tweet_main.creator.name }}</span>
-        <span class="hover:underline text-gray-400">@{{ tweet_main.creator.user }}</span>
+        <span class="hover:underline"> {{ tweet.creator.name }}</span>
+        <span class="hover:underline text-gray-400">@{{ tweet.creator.user }}</span>
     </div>
 {% endblock %}
 
 {% block tweet_message %}
-    {% with tweet_message=tweet_main.message %}
+    {% with tweet_message=tweet.message %}
         {{ block.super }}
     {% endwith %}
 {% endblock %}
 
 {% block tweet_statics_info %}
     <div class="py-4 text-gray-600">
-        {{ tweet_main.modified }}
+        {{ tweet.modified }}
     </div>
     <div class="py-3">
-        {% with tweet_likes=tweet_main.likes.count tweet_retweets=tweet_main.retweets.count tweet_comments=tweet_main.children.count tweet=tweet_main %}
+        {% with tweet_likes=tweet.likes.count tweet_retweets=tweet.retweets.count tweet_comments=tweet.children.count %}
             {{ block.super }}
         {% endwith %}
     </div>

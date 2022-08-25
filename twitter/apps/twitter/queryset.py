@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-from django.db.models import QuerySet, Value, Q, Count, F, Case, When, Subquery, Sum
+from django.db.models import QuerySet, Value, Q, Count, F, Case, When
 
 twitter_values = ('id', 'parent', 'message', 'likes', 'retweets',
                   'comments', 'creator_name', 'creator_user',
                   'modified', 'action', 'action_creator',
-                  'action_user', 'answer_id', 'images', 'order_date', 'template')
+                  'action_user', 'answer_id', 'order_date', 'template')
 
 
 @dataclass
@@ -39,7 +39,6 @@ class TweetQuerySet(QuerySet):
             action_creator=Value('None'),
             action_user=Value('Non'),
             answer_id=Value(0),
-            images=Sum('images'),
             order_date=F('created'),
             template=Value('twitter/includes/tweet/types/tweet_timeline.html')
         )
@@ -66,7 +65,6 @@ class TweetQuerySet(QuerySet):
                 action_creator=F('creator__name'),
                 action_user=F('creator__user'),
                 answer_id=F('answer_id'),
-                images=Sum('tweet__images'),
                 order_date=F('created'),
                 template=Case(
                     When(action=Action.RETWEET, then=Value('twitter/includes/tweet/types/tweet_retweet.html')),

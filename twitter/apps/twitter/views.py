@@ -37,10 +37,10 @@ def post_tweet_view(request):
 
 
 def tweet_view(request, tweet_id):
-    tweet_main = get_object_or_404(Tweet, id=tweet_id)
-    tweet_ancestors = tweet_main.get_ancestors()
+    tweet= get_object_or_404(Tweet, id=tweet_id)
+    tweet_ancestors = tweet.get_ancestors()
     return render(request, 'twitter/includes/tweet/tweet_view.html', context={
-        'tweet_main': tweet_main,
+        'tweet': tweet,
         'tweet_ancestors': tweet_ancestors,
     })
 

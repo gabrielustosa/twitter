@@ -11,10 +11,10 @@
 
 {% include 'twitter/includes/tweet/tweet_view_partials/tweet_main.html' %}
 
-{% include 'twitter/includes/tweet/partials/tweet_answer_field.html' with tweet=tweet_main %}
+{% include 'twitter/includes/tweet/partials/tweet_answer_field.html' %}
 <div id="answers"></div>
 
 <script src="https://unpkg.com/htmx.org@1.7.0"></script>
 <script>
-    htmx.ajax('GET', '{% url 'twitter:load_answers' tweet_main.id %}', '#answers')
+    htmx.ajax('GET', '{% url 'twitter:load_answers' tweet.id %}', '#answers')
 </script>
