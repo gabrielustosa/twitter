@@ -15,7 +15,8 @@ urlpatterns = [
 
     path("__reload__/", include("django_browser_reload.urls")),
 
-    path('', include('twitter.apps.twitter.urls'))
+    path('', include('twitter.apps.twitter.urls')),
+    path('', include('twitter.apps.twitter.api.urls')),
 
 ]
 

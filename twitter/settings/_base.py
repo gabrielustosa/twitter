@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crispy_tailwind',
     'theme',
     'imagekit',
+    'rest_framework',
 
     # my apps
     'twitter.apps.core',

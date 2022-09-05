@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
+from django.core import serializers
 
 from twitter.apps.twitter.constants import Action
 from twitter.apps.twitter.models import Tweet, TweetAction, TweetImage
@@ -14,15 +15,44 @@ def home_view(request):
     return render(request, 'twitter/home.html')
 
 
-class LoadTweetView(ListView):
-    template_name = 'twitter/includes/tweet/load_tweet.html'
+class LoadTweetBase(ListView):
     model = Tweet
     paginate_by = 5
     context_object_name = 'tweets'
 
+
+class LoadTweetView(LoadTweetBase):
+    template_name = 'twitter/includes/tweet/load_tweet.html'
+
     def get_queryset(self):
         queryset = Tweet.timeline_objects.user_timeline(self.request.user)
         return TweetManageQuerySet(queryset=queryset)
+
+
+class LoadTweetAnswer(LoadTweetBase):
+    template_name = 'twitter/includes/tweet/load_tweet_answer.html'
+
+    def get_queryset(self):
+        tweet = Tweet.objects.get(id=self.kwargs.get('tweet_id'))
+        return tweet.get_children().order_by('-created')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['twitter_id'] = self.kwargs.get('tweet_id')
+        return context
+
+
+class LoadUserTweets(LoadTweetBase):
+    template_name = 'twitter/includes/tweet/load_user_tweets.html'
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return Tweet.objects.filter(creator__id=user_id).annotate(comments=Count('children'))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['user_id'] = self.kwargs.get('user_id')
+        return context
 
 
 @login_required
@@ -37,7 +67,7 @@ def post_tweet_view(request):
 
 
 def tweet_view(request, tweet_id):
-    tweet= get_object_or_404(Tweet, id=tweet_id)
+    tweet = get_object_or_404(Tweet, id=tweet_id)
     tweet_ancestors = tweet.get_ancestors()
     return render(request, 'twitter/includes/tweet/tweet_view.html', context={
         'tweet': tweet,
@@ -52,22 +82,6 @@ def answer_tweet(request, tweet_id):
     if tweet_main.is_root_node():
         TweetAction.objects.create(tweet_id=tweet_id, action=Action.COMMENT, answer=tweet)
     return tweet_view(request, tweet_id)
-
-
-class LoadTweetAnswer(ListView):
-    template_name = 'twitter/includes/tweet/load_tweet_answer.html'
-    model = Tweet
-    paginate_by = 5
-    context_object_name = 'tweets'
-
-    def get_queryset(self):
-        tweet = Tweet.objects.get(id=self.kwargs.get('tweet_id'))
-        return tweet.get_children().order_by('-created')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data()
-        context['twitter_id'] = self.kwargs.get('tweet_id')
-        return context
 
 
 def get_tweet(request, tweet_id):
@@ -106,21 +120,7 @@ def retweet_tweet_view(request, tweet_id):
 
 
 def user_view(request, user):
-    user = get_object_or_404(User, user=user)
+    user = get_object_or_404(User, user__iexact=user)
     return render(request, 'twitter/includes/user/profile.html', context={'twitter_user': user})
 
 
-class LoadUserTweets(ListView):
-    template_name = 'twitter/includes/tweet/load_user_tweets.html'
-    model = Tweet
-    paginate_by = 5
-    context_object_name = 'tweets'
-
-    def get_queryset(self):
-        user_id = self.kwargs.get('user_id')
-        return Tweet.objects.filter(creator__id=user_id).annotate(comments=Count('children'))
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data()
-        context['user_id'] = self.kwargs.get('user_id')
-        return context

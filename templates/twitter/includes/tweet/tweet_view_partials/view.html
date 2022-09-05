@@ -14,7 +14,7 @@
 {% include 'twitter/includes/tweet/partials/tweet_answer_field.html' %}
 <div id="answers"></div>
 
-<script src="https://unpkg.com/htmx.org@1.7.0"></script>
+<script src="https://unpkg.com/htmx.org@1.8.0"></script>
 <script>
     htmx.ajax('GET', '{% url 'twitter:load_answers' tweet.id %}', '#answers')
 </script>

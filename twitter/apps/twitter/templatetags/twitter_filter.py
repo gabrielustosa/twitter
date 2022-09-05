@@ -55,7 +55,7 @@ def tweet_ancestors_parsed(tweet):
     ancestors_parsed = ' '.join([string_format.format(tweet.creator.name) for tweet in two])
 
     if ancestors.count() > 2:
-        ancestors_parsed += f' <span class="text-blue-400 hover:underline">e mais {ancestors.count()}</span>'
+        ancestors_parsed += f' <span class="text-blue-400 hover:underline">e mais {ancestors.count() - 2}</span>'
 
     return mark_safe(ancestors_parsed)
 

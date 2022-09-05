@@ -102,7 +102,7 @@
         </div>
     </main>
 
-    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
     <script>
         htmx.ajax('GET', '{% url 'twitter:load_user_tweets' twitter_user.id %}', '#tweets')
     </script>
