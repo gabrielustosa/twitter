@@ -5,7 +5,7 @@
         <!-- Search -->
         <div class="relative m-2">
             <div
-                    class="absolute text-gray-600 flex items-center pl-4 h-full cursor-pointer"
+                    class="absolute flex items-center pl-4 h-full cursor-pointer"
             >
                 <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -24,9 +24,10 @@
                     ></path>
                 </svg>
             </div>
-            <input
-                    class="w-full bg-gray-200 dark:bg-dim-400 border-gray-200 dark:border-dim-400 text-gray-100 focus:bg-gray-100 dark:focus:bg-dim-900 focus:outline-none focus:border focus:border-blue-200 font-normal h-9 flex items-center pl-12 text-sm rounded-full border shadow"
-                    placeholder="Search Twitter"
+            <input hx-get="{% url 'twitter:load_results' %}" hx-target="#content"
+                   hx-trigger="keyup changed delay:500ms"
+                   class="w-full bg-gray-200 dark:bg-dim-400 border-gray-200 dark:border-dim-400 focus:bg-gray-100 dark:focus:bg-dim-900 focus:outline-none focus:border focus:border-blue-200 font-normal h-9 flex items-center pl-12 text-sm rounded-full border shadow"
+                   placeholder="Search Twitter" name="term"
             />
         </div>
         <!-- /Search -->

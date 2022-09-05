@@ -1,3 +1,5 @@
+import re
+
 from django import template
 from django.utils import timezone
 from django.utils.safestring import mark_safe
@@ -86,7 +88,7 @@ def load_tweet_images(tweet_id):
         return ''
 
     return mark_safe(f"""
-        <div class="grid grid-cols-2 gap-2 py-2">
+        <div class="grid grid-cols-2 gap-2 py-2 mb-5">
             {''.join(images_element)}
         </div>
     """)

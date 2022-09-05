@@ -16,4 +16,5 @@ urlpatterns = [
     path('tweet/retweet/<int:tweet_id>/', views.retweet_tweet_view, name='retweet_tweet'),
     path('user/<str:user>/', views.user_view, name='user'),
     path('tweet/load/<int:user_id>/', views.LoadUserTweets.as_view(), name='load_user_tweets'),
+    path('tweet/load/result/', views.LoadTweetResults.as_view(), name='load_results'),
 ]

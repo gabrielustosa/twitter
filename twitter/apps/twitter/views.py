@@ -1,7 +1,8 @@
+from braces.views import CsrfExemptMixin
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.core import serializers
 
 from twitter.apps.twitter.constants import Action
@@ -39,6 +40,23 @@ class LoadTweetAnswer(LoadTweetBase):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         context['twitter_id'] = self.kwargs.get('tweet_id')
+        return context
+
+
+class LoadTweetResults(TemplateView):
+    template_name = 'twitter/includes/tweet/load_search_result.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        term = self.request.GET.get('term')
+
+        query = Tweet.objects.filter(message__icontains=term).annotate(comments=Count('children'))
+
+        context['tweets'] = query
+        context['term'] = term
+        context['total'] = query.count
+
         return context
 
 
